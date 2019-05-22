@@ -134,57 +134,19 @@ function create ()
         y: this.disBtn.bg.y// + this.disBtn.bg.radius
     };
 
-    this.disBtn.btn = this.disBtn.create(this.disBtn.bg.centerPoint.x, this.disBtn.bg.centerPoint.y, 'btn_2');
-    //this.disBtn.btn.anchor.set(0.5);
-    this.disBtn.btn.inputEnabled = true;
+    this.disBtn.btn = this.disBtn.create(this.disBtn.bg.centerPoint.x, this.disBtn.bg.centerPoint.y, 'btn_2').setInteractive();
 
-    //开启摇杆按钮点击事件
-    this.disBtn.btn.inputEnabled = true;
-    //开启摇杆按钮拖动功能
-    this.disBtn.btn.input.enableDrag();
-    //开始拖动回调，本demo中用不到这个回调
-    //this.disBtn.btn.events.onDragStart.add(this.dragStart,this);
-    //拖动中的回调
-    this.disBtn.btn.events.onDragUpdate.add(this.dragUpdate, this);
-    //结束拖动回调
-    this.disBtn.btn.events.onDragStop.add(this.dragStop, this);
-}
+    this.input.setDraggable(this.disBtn.btn);
+    this.input.on('dragstart', function(pointer, gameObject) {
 
-function dragUpdate(e){
-		/**
-		* 获取触摸点与摇杆中心点的弧度
-		* this.angleToXY(触摸点.x, 触摸点.y, 摇杆中心点.x, 摇杆中心点.y)
-		*/
-		var radian = this.angleToXY(this.game.input.x, this.game.input.y - this.disBtn.cameraOffset.y, this.disBtn.bg.centerPoint.x, this.disBtn.bg.centerPoint.y);
-		/**
-		* 设置摇杆最大移动范围
-		* this.disToXY(摇杆中心点.x, 摇杆中心点.y, 摇杆.x, 摇杆.y)
-		*/
-		var dis = this.disToXY(this.disBtn.bg.centerPoint.x, this.disBtn.bg.centerPoint.y, this.disBtn.btn.x, this.disBtn.btn.y)
-		if(dis > this.disBtn.bg.radius){
-			//console.log("超出范围了！");
-			/**
-			* 设置摇杆新的坐标
-			* 公式：
-			* X = 中心点.x + 半径 * Math.cos(弧度)
-			* Y = 中心点.y + 半径 * Math.sin(弧度)
-			*/
-			this.disBtn.btn.x = this.disBtn.bg.centerPoint.x + this.disBtn.bg.radius * Math.cos(radian);
-			this.disBtn.btn.y = this.disBtn.bg.centerPoint.y + this.disBtn.bg.radius * Math.sin(radian);
-		};
-		//按照摇杆与中心点的角度，设置人物移动方向
-		//this.play.body.velocity.copyFrom(this.game.physics.arcade.velocityFromAngle(radian * 180 / Math.PI, 200));
-}
+    });
+    this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
+        gameObject.x = dragX;
+        gameObject.y = dragY;
+    });
+    this.input.on('dragend', function(pointer, gameObject) {
 
-function dragStop(e) {
-	//重置摇杆按钮坐标为摇杆中心点
-	e.x = this.disBtn.bg.centerPoint.x;
-	e.y = this.disBtn.bg.centerPoint.y;
-	//停止主角运动
-	player.setVelocityX(0);
-	player.setVelocityY(0);
-	//停止主角动画
-    player.anims.play('turn');
+    });
 }
 
 function update ()
