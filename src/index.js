@@ -34,6 +34,7 @@ var cursors;
 var score = 0;
 var gameOver = false;
 var scoreText;
+var disBtn;
 
 var game = new Phaser.Game(config);
 
@@ -126,23 +127,30 @@ function create ()
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
     // Create move button
-    this.disBtn = this.add.group();
-    this.disBtn.bg = this.disBtn.create(100, 538, 'btn_1');
-    this.disBtn.bg.radius = this.disBtn.bg.width / 2;
-    this.disBtn.bg.centerPoint = {
-        x: this.disBtn.bg.x,// + this.disBtn.bg.radius,
-        y: this.disBtn.bg.y// + this.disBtn.bg.radius
+    disBtn = this.add.group();
+    disBtn.bg = disBtn.create(100, 538, 'btn_1');
+    disBtn.bg.radius = disBtn.bg.width / 2;
+    disBtn.bg.centerPoint = {
+        x: disBtn.bg.x,// + this.disBtn.bg.radius,
+        y: disBtn.bg.y// + this.disBtn.bg.radius
     };
 
-    this.disBtn.btn = this.disBtn.create(this.disBtn.bg.centerPoint.x, this.disBtn.bg.centerPoint.y, 'btn_2').setInteractive();
-
-    this.input.setDraggable(this.disBtn.btn);
+    disBtn.btn = disBtn.create(disBtn.bg.centerPoint.x, disBtn.bg.centerPoint.y, 'btn_2').setInteractive();
+    disBtn.btn.radius = disBtn.btn.width / 2;
+    this.input.setDraggable(disBtn.btn);
     this.input.on('dragstart', function(pointer, gameObject) {
 
     });
     this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
-        gameObject.x = dragX;
-        gameObject.y = dragY;
+        var dist = (dragX - disBtn.bg.x) * (dragX - disBtn.bg.x) +
+               (dragY - disBtn.bg.y) * (dragY - disBtn.bg.y);
+        dist = Math.sqrt(dist);
+        //console.log(dist + '' + this.disBtn.bg.radius + '' + this.disBtn.btn.radius);
+        if (dist <= disBtn.bg.radius - disBtn.btn.radius)
+        {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+        }
     });
     this.input.on('dragend', function(pointer, gameObject) {
 
