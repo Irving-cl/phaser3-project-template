@@ -142,13 +142,23 @@ function create ()
 
     });
     this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
-        var dist = (dragX - disBtn.bg.x) * (dragX - disBtn.bg.x) +
-               (dragY - disBtn.bg.y) * (dragY - disBtn.bg.y);
-        dist = Math.sqrt(dist);
+        var dtX = dragX - disBtn.bg.x;
+        var dtY = dragY - disBtn.bg.y;
+        var dist = Math.sqrt(dtX * dtX + dtY * dtY);
         if (dist <= disBtn.bg.radius - disBtn.btn.radius)
         {
             gameObject.x = dragX;
             gameObject.y = dragY;
+        }
+
+        // change player's velocity
+        if (Math.abs(dtX) >= Math.abs(dtY))
+        {
+            player.setVelocityX((dtX > 0 ? 1 : -1) * 160);
+        }
+        else
+        {
+            player.setVelocityY((dtY > 0 ? 0 : -1) * 160);
         }
     });
     this.input.on('dragend', function(pointer, gameObject) {
