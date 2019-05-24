@@ -145,7 +145,6 @@ function create ()
         var dist = (dragX - disBtn.bg.x) * (dragX - disBtn.bg.x) +
                (dragY - disBtn.bg.y) * (dragY - disBtn.bg.y);
         dist = Math.sqrt(dist);
-        //console.log(dist + '' + this.disBtn.bg.radius + '' + this.disBtn.btn.radius);
         if (dist <= disBtn.bg.radius - disBtn.btn.radius)
         {
             gameObject.x = dragX;
@@ -153,7 +152,8 @@ function create ()
         }
     });
     this.input.on('dragend', function(pointer, gameObject) {
-
+        gameObject.x = disBtn.bg.x;
+        gameObject.y = disBtn.bg.y;
     });
 }
 
