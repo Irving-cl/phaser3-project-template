@@ -36,6 +36,10 @@ var gameOver = false;
 var scoreText;
 var disBtn;
 
+var dragLeft = false;
+var dragRight = false;
+var dragUp = false;
+
 var game = new Phaser.Game(config);
 
 function preload ()
@@ -154,16 +158,27 @@ function create ()
         // change player's velocity
         if (Math.abs(dtX) >= Math.abs(dtY))
         {
-            player.setVelocityX((dtX > 0 ? 1 : -1) * 160);
+            if (dtX > 0)
+            {
+                dragRight = true;
+            }
+            else
+            {
+                dragLeft = true;
+            }
         }
         else
         {
-            player.setVelocityY((dtY > 0 ? 0 : -1) * 160);
+            if (dtY < 0)
+            {
+                dragUp = true;
+            }
         }
     });
     this.input.on('dragend', function(pointer, gameObject) {
         gameObject.x = disBtn.bg.x;
         gameObject.y = disBtn.bg.y;
+        dragLeft = dragRight = dragUp = false;
     });
 }
 
@@ -174,13 +189,13 @@ function update ()
         return;
     }
 
-    if (cursors.left.isDown)
+    if (dragLeft)
     {
         player.setVelocityX(-160);
 
         player.anims.play('left', true);
     }
-    else if (cursors.right.isDown)
+    else if (dragRight)
     {
         player.setVelocityX(160);
 
@@ -193,7 +208,11 @@ function update ()
         player.anims.play('turn');
     }
 
-    if (cursors.up.isDown && player.body.touching.down)
+    //if (cursors.up.isDown && player.body.touching.down)
+    //{
+        //player.setVelocityY(-330);
+    //}
+    if (dragUp && player.body.touching.down)
     {
         player.setVelocityY(-330);
     }
