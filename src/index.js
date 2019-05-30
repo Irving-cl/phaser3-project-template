@@ -12,7 +12,8 @@ var config = {
     type: Phaser.AUTO,
     scale: {
         mode: Phaser.Scale.FIT,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
+        //autoCenter: Phaser.Scale.CENTER_BOTH,
+        autoCenter: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
         width: 800,
         height: 600
     },
@@ -60,7 +61,8 @@ function preload ()
 function create ()
 {
     //  A simple background for our game
-    this.add.image(400, 300, 'sky');
+    //this.add.image(400, 300, 'sky');
+    this.add.image(0, 0, 'sky').setOrigin(0);
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
